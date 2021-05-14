@@ -20,7 +20,7 @@
             <td><c:out value="${book.title}"/></td>
             <td><c:out value="${book.author}"/></td>
             <td><a href="http://localhost:8080/BookAPI/books/delete/${book.id}">Delete Book</a></td>
-            <td><a href="http://localhost:8080/BookAPI/books/edit/${book.id}">Edit Book</a></td>
+            <td><a href="http://localhost:8080/BookAPI/books/edit/${book.id}">Delete Book</a></td>
         </tr>
     </c:forEach>
     </tbody>

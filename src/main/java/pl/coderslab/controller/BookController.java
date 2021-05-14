@@ -1,54 +1,70 @@
 package pl.coderslab.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import pl.coderslab.dao.BookService;
+import pl.coderslab.dao.JpaBookService;
 import pl.coderslab.entity.Book;
-import pl.coderslab.repository.BookRepository;
 
-import javax.persistence.EntityManager;
+import java.util.ArrayList;
 import java.util.List;
 
-@Transactional
-@RestController
+@Controller
 @RequestMapping("/books")
 public class BookController {
-    private EntityManager em;
-    private BookRepository br;
+    private BookService bookService;
 
+    public BookController(BookService jpaBookService) {
+        this.bookService = jpaBookService;
+    }
 
 
     @RequestMapping("/helloBook")
-    @ResponseBody
     public String helloBook() {
-        em.persist(new Book("9788324631766", "Thinking in Java", "Bruce Eckel",
+        bookService.add(new Book("9788324631766", "Thinking in Java", "Bruce Eckel",
                 "Helion", "programming"));
-        return "hello";
+        return "/all";
     }
-    @GetMapping("")
-    public List<Book> allBooks(){
-        return br.findAll();
-    }
-
-    @GetMapping("/{id}")
-    public Book book(@PathVariable("id") long id){
-        return br.findBookById(id);
+    @GetMapping("/all")
+    public String showBooks() {
+        List<Book> books = bookService.getBooks();
+        return "/books/all";
     }
 
-    @PostMapping("")
-    public void addBook(@RequestBody Book book) {
-        em.persist(book);
+    @GetMapping("add")
+    public String addBookGet(Model model){
+        model.addAttribute("book", new Book());
+        return "/books/form";
     }
-    @PutMapping
-    @ResponseBody
-    public void updateBook(@RequestBody Book book){
-        em.merge(book);
+    @PostMapping("add")
+    public String addBook(@ModelAttribute Book book) {
+        bookService.add(book);
+        return "../index";
     }
 
-    @DeleteMapping("/{id}")
-    public void delete(@PathVariable long id){
-        Book toDel = br.findBookById(id);
-        em.remove(em.contains(toDel)?toDel:em.merge(toDel));
+    @GetMapping("/edit/{id}")
+    public String editBookGet(@PathVariable long id, Model model){
+        Book toEdit = bookService.get(id);
+        model.addAttribute("book", toEdit);
+        return "/books/form";
+    }
+
+    @PostMapping("edit/{id}")
+    public String editBook(@ModelAttribute Book book) {
+        bookService.update(book);
+        return "../index";
+    }
+
+    @GetMapping("/delete/{id}")
+    public String delete(@PathVariable long id){
+        bookService.delete(id);
+        return "/";
+    }
+
+    @ModelAttribute("books")
+    public List<Book> books(){
+        List<Book> books = bookService.getBooks();
+        return books;
     }
 }
