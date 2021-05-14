@@ -12,5 +12,7 @@
 </head>
 <body>
 <h1>Welcome to BookAPI</h1>
+<h2><a href="http://localhost:8080/BookAPI/books/all">Lista książek</a></h2>
+<h2><a href="http://localhost:8080/BookAPI/books/add">Dodaj książkę</a></h2>
 </body>
 </html>

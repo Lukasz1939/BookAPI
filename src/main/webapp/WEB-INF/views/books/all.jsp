@@ -21,6 +21,7 @@
             <td><c:out value="${book.author}"/></td>
             <td><a href="http://localhost:8080/BookAPI/books/delete/${book.id}">Delete Book</a></td>
             <td><a href="http://localhost:8080/BookAPI/books/edit/${book.id}">Edit Book</a></td>
+            <td><a href="http://localhost:8080/BookAPI/books/get/${book.id}">Show Book</a></td>
         </tr>
     </c:forEach>
     </tbody>

@@ -26,12 +26,22 @@ public class BookController {
                 "Helion", "programming"));
         return "/all";
     }
+    @GetMapping("/home")
+    public String home() {
+        return "/books/home";
+    }
     @GetMapping("/all")
     public String showBooks() {
         List<Book> books = bookService.getBooks();
         return "/books/all";
     }
-
+    @GetMapping("/get/{id}")
+    public String getBook(@PathVariable long id, Model model){
+        List<Book> book = new ArrayList<>();
+        book.add(bookService.get(id));
+        model.addAttribute("book", book);
+        return "/books/oneBook";
+    }
     @GetMapping("add")
     public String addBookGet(Model model){
         model.addAttribute("book", new Book());
@@ -40,7 +50,7 @@ public class BookController {
     @PostMapping("add")
     public String addBook(@ModelAttribute Book book) {
         bookService.add(book);
-        return "../index";
+        return "books/home";
     }
 
     @GetMapping("/edit/{id}")
@@ -53,13 +63,13 @@ public class BookController {
     @PostMapping("edit/{id}")
     public String editBook(@ModelAttribute Book book) {
         bookService.update(book);
-        return "../index";
+        return "books/home";
     }
 
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable long id){
         bookService.delete(id);
-        return "/";
+        return "books/home";
     }
 
     @ModelAttribute("books")
